@@ -1,0 +1,13 @@
+const express = require("express");
+const router = express.Router();
+
+const clientController = require("../controllers/clientController");
+const { protect } = require("../middleware/authMiddleware");
+
+router.post("/", protect, clientController.createClient);
+router.get("/", protect, clientController.getClients);
+router.get("/search", protect, clientController.searchClients);
+router.put("/:id", protect, clientController.updateClient);
+router.delete("/:id", protect, clientController.deleteClient);
+
+module.exports = router;
