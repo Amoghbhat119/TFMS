@@ -1,6 +1,10 @@
 const Application = require("../models/Application");
 const Candidate = require("../models/Candidate");
+const CallLog = require("../models/CallLog");
 
+
+
+// Recruiter Performance Report
 exports.getRecruiterPerformance = async (recruiterId) => {
 
   const totalCandidates = await Application.countDocuments({
@@ -49,6 +53,7 @@ exports.getRecruiterPerformance = async (recruiterId) => {
 
 
 
+// Stage Distribution Report
 exports.getStageDistribution = async () => {
 
   const stages = await Application.aggregate([
@@ -65,6 +70,7 @@ exports.getStageDistribution = async () => {
 
 
 
+// Monthly Hiring Trends
 exports.getMonthlyHiringTrends = async () => {
 
   const trends = await Application.aggregate([
@@ -87,6 +93,7 @@ exports.getMonthlyHiringTrends = async () => {
 
 
 
+// Source Effectiveness Report
 exports.getSourceEffectiveness = async () => {
 
   const sources = await Candidate.aggregate([
@@ -99,4 +106,66 @@ exports.getSourceEffectiveness = async () => {
   ]);
 
   return sources;
+};
+
+
+
+// Daily Recruiter Report
+exports.getDailyRecruiterReport = async () => {
+
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  const report = await CallLog.aggregate([
+    {
+      $match: {
+        createdAt: { $gte: today }
+      }
+    },
+    {
+      $group: {
+        _id: "$recruiterId",
+        calls: { $sum: 1 },
+        interested: {
+          $sum: {
+            $cond: [{ $eq: ["$status", "Interested"] }, 1, 0]
+          }
+        },
+        notInterested: {
+          $sum: {
+            $cond: [{ $eq: ["$status", "Not Interested"] }, 1, 0]
+          }
+        },
+        interviews: {
+          $sum: {
+            $cond: [{ $eq: ["$status", "Interview Scheduled"] }, 1, 0]
+          }
+        }
+      }
+    }
+  ]);
+
+  return report;
+};
+
+
+
+// Client Wise Call Report
+exports.getClientCallReport = async () => {
+
+  const report = await CallLog.aggregate([
+    {
+      $group: {
+        _id: "$client",
+        calls: { $sum: 1 },
+        interested: {
+          $sum: {
+            $cond: [{ $eq: ["$status", "Interested"] }, 1, 0]
+          }
+        }
+      }
+    }
+  ]);
+
+  return report;
 };

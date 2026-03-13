@@ -100,3 +100,53 @@ exports.getSourceEffectiveness = async (req, res) => {
   }
 
 };
+
+
+
+// Daily Recruiter Report
+exports.getDailyRecruiterReport = async (req, res) => {
+
+  try {
+
+    const report = await reportService.getDailyRecruiterReport();
+
+    res.json({
+      success: true,
+      report
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+
+  }
+
+};
+
+
+
+// Client Wise Call Report
+exports.getClientCallReport = async (req, res) => {
+
+  try {
+
+    const report = await reportService.getClientCallReport();
+
+    res.json({
+      success: true,
+      report
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+
+  }
+
+};

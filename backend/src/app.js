@@ -11,6 +11,11 @@ const callLogRoutes = require("./routes/callLogRoutes");
 const interviewRoutes = require("./routes/interviewRoutes");
 const importRoutes = require("./routes/importRoutes");
 const reportRoutes = require("./routes/reportRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
+
+/* ADD THESE TWO */
+const recruiterRoutes = require("./routes/recruiterRoutes");
+const testRoutes = require("./routes/testRoutes");
 
 const app = express();
 
@@ -41,6 +46,11 @@ app.use("/api/calllogs", callLogRoutes);
 app.use("/api/interviews", interviewRoutes);
 app.use("/api/import", importRoutes);
 app.use("/api/reports", reportRoutes);
+app.use("/api/dashboard", dashboardRoutes);
+
+/* NEW ROUTES */
+app.use("/api/recruiters", recruiterRoutes);
+app.use("/api/test", testRoutes);
 
 
 module.exports = app;
